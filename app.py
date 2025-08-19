@@ -34,7 +34,7 @@ from eda import create_age_plotly
 from modeling import prepare_data
 
 st.set_page_config(layout="wide")
-df = pd.read_excel('AutoBI.xlsx',sheet_name='Output')
+df = pd.read_csv('AutoBI_output.csv', index=False)
 feature_df = df.loc[:, ['INSAGE', 'VEHICLE_TYPE', 'GENDER', 'MARITAL_STATUS', 'PREVCLM', 'SEATBELT']]
 target_series = df.loc[:, 'LOSS']
 train_feature_df, test_feature_df, train_target_series, test_target_series = train_test_split(feature_df, target_series, test_size=0.3, random_state=123)
@@ -69,20 +69,27 @@ with eda_tab:
         fig.update_layout(xaxis_title='Damage', yaxis_title='Count')
         st.plotly_chart(fig, key='damage_plotly')
     with numeric_eda_cols[1]:
-        st.subheader('Numeric EDA')
-        st.plotly_chart(create_damage_plotly(df))
+        st.subheader('Age Distribution')
+        fig = px.histogram(df, x='INSAGE', nbins=20, title='Distribution of Ages')
+        fig.update_traces(marker_line_width=1, marker_line_color="black")
+        fig.update_layout(xaxis_title='Damage', yaxis_title='Count')
+        st.plotly_chart(fig, key='age_plotly')
     
     with categorical_eda_cols[0]:
-        fig = px.bar(df, x='VEHICLE_TYPE', title='Vehicle Type Distribution')
+        fig = px.bar(df, x='VEHICLE_TYPE', title='Vehicle Types', color='VEHICLE_TYPE',color_discrete_sequence=px.colors.qualitative.Pastel)
         st.plotly_chart(fig, key='vehicle_type_plotly')
     with categorical_eda_cols[1]:
-        fig = px.bar(df, x='GENDER', title='Vehicle Type Distribution')
+        fig = px.bar(df, x='GENDER', title='Genders', color='GENDER',color_discrete_sequence=px.colors.qualitative.Pastel)
         st.plotly_chart(fig,key='gender_plotly')
     with categorical_eda_cols[2]:
-        fig = px.bar(df, x='MARITAL_STATUS', title='Vehicle Type Distribution')
+        fig = px.bar(df, x='MARITAL_STATUS', title='Marital Statuses', color='MARITAL_STATUS', color_discrete_sequence=px.colors.qualitative.Pastel)
         st.plotly_chart(fig, key='marital_status_plotly')
-    # st.plotly_chart(fig)
-    # st.plotly_chart(create_age_plotly(df))
+    with categorical_eda_cols[3]:
+        fig = px.bar(df, x='PREVCLM', title='Previous Claims Options',color='PREVCLM',color_discrete_sequence=px.colors.qualitative.Pastel)
+        st.plotly_chart(fig, key='prevclm_plotly')
+    with categorical_eda_cols[4]:
+        fig = px.bar(df, x='SEATBELT', title='Seatbelt Options',color='SEATBELT',color_discrete_sequence=px.colors.qualitative.Pastel)
+        st.plotly_chart(fig, key='seatbelt_plotly')
 
 
 
