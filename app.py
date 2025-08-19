@@ -34,7 +34,7 @@ from eda import create_age_plotly
 from modeling import prepare_data
 
 st.set_page_config(layout="wide")
-df = pd.read_csv('AutoBI_output.csv', index=False)
+df = pd.read_csv('AutoBI_output.csv')
 feature_df = df.loc[:, ['INSAGE', 'VEHICLE_TYPE', 'GENDER', 'MARITAL_STATUS', 'PREVCLM', 'SEATBELT']]
 target_series = df.loc[:, 'LOSS']
 train_feature_df, test_feature_df, train_target_series, test_target_series = train_test_split(feature_df, target_series, test_size=0.3, random_state=123)
@@ -51,12 +51,10 @@ def create_glm_model(target_series, prepared_feature_df, model_type='OLS'):
         model = sm.GLM(target_series, prepared_feature_df, family=sm.families.Tweedie(var_power=1.5, link=sm.families.links.Log())).fit()
     return model
 data_tab, eda_tab, model_tab, final_premium_tab = st.tabs(['Data', 'EDA', 'OLS Model', 'Final Premium'])
-# st.title('Technical Exam')
 st.header('Technical Exam by Rito Dominado')
 with data_tab:
     st.write('Data Overview')
     st.dataframe(df)
-    # pivot_table(df,height=50,use_container_width=True, key="streamlit_pivottable")
 with eda_tab:
     st.write('Exploratory Data Analysis')
     fig = create_damage_plotly(df)
@@ -91,27 +89,11 @@ with eda_tab:
         fig = px.bar(df, x='SEATBELT', title='Seatbelt Options',color='SEATBELT',color_discrete_sequence=px.colors.qualitative.Pastel)
         st.plotly_chart(fig, key='seatbelt_plotly')
 
-
-
-# model_type = st.selectbox('Select Model Type', options=['OLS', 'Tweedie', 'Gamma'], key='model_type')
-# model = create_glm_model(train_target_series, train_feature_df, model_type=model_type)
 with model_tab:
     st.write('Ordinary Least Squares Model')
     st.selectbox('Select Imputation Method', options=['KNN', 'Simple'], key='imputation_method')
     model = sm.OLS(train_target_series, prepared_feature_train_df).fit()
-    # model = create_glm_model(train_target_series, train_feature_df, model_type=st.session_state.model_type)
-    
-    st.write('Model Summary')
-    # model_summary = model.summary()
-    # st.write(model_summary.as_text())
-    # st.write(model.summary())
-    # st.dataframe(model_summary.tables[0])
-    # st.dataframe(model_summary.tables[1])
-    
-    # st.html(model_summary.tables[0].as_html())
-    # st.html(model_summary.tables[1].as_html())
-
-    
+    st.write('Model Summary')    
 
 with final_premium_tab:
     st.write('Final Premium Calculation')
