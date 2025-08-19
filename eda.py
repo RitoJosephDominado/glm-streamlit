@@ -6,18 +6,10 @@ import matplotlib.ticker as ticker
 import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-df = pd.read_excel('AutoBI.xlsx',sheet_name='Output')
 
-# # Checking for missing values
-# for col in df.columns:
-#     perc_na = np.round(100*df.loc[:, col].isnull().sum()/df.shape[0], 4)
-#     print(f'{col}: {str(perc_na)}%')
-
-# damage_hist.xaxis.set_major_formatter(ticker.StrMethodFormatter('${x:,.0f}'))
 def create_damage_histogram(df):
     bins= range(0, 280001, 15000)
     plt.figure(figsize=(10, 7))
-    # damage_hist = sns.histplot(df.query('ACTUALDAMAGE <= 15001').ACTUALDAMAGE, bins=bins)
     damage_hist = sns.histplot(df.query(' POLICYNUM != 22286').ACTUALDAMAGE, bins=bins)
     damage_hist.set_title('Distribution for Damages')
     damage_hist.set_xticks(bins)
@@ -50,9 +42,7 @@ def create_age_histogram(df):
     plt.title('Distribution of Ages')
     plt.xlabel('Age')
     plt.show()
-    # sns.histogram(df.INSAGE)
     plt.show()
-    # damage_hist.ticklabel_format(style='plain')
 
 def plot_categorical_barplots(df):
     fig, axes = plt.subplots(nrows = 3, ncols = 2, figsize=(15, 12))
@@ -88,11 +78,7 @@ def create_categorical_violinplots(df):
         sns.violinplot(x=col, y='ACTUALDAMAGE', data=display_df, ax=axes[i], palette='pastel')
 
         axes[i].set_title(f'Distribution of DAMAGE by {col}', fontsize=14)
-        # axes[i].set_xlabel(f'{col} Category')
-        # axes[i].set_ylabel('DAMAGE')
-        # axes[i].tick_params(axis='x', rotation=45) # Rotate for readability
     plt.tight_layout()
-    # plt.show()
     if len(categorical_columns) < len(axes):
         axes[-1].remove()
 
@@ -111,8 +97,4 @@ def create_age_plotly(df):
     fig.update_traces(marker_line_width=1,marker_line_color="black")
     fig.update_layout(xaxis_title='Age', yaxis_title='Count')
     return fig
-
-# create_missing_values_barplot(df)
-# f = create_age_plotly(df)
-# f.show()
 

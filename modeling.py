@@ -8,8 +8,6 @@ from statsmodels.iolib.smpickle import save_pickle
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_squared_error
 
-df = pd.read_excel('AutoBI.xlsx',sheet_name='Output')
-
 def prepare_data(df):
     categorical_imputer = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
     numerical_imputer = SimpleImputer(missing_values=np.nan, strategy='median')
@@ -49,23 +47,3 @@ def print_error_metrics(target_series, pred_series):
     mse = mean_squared_error(target_series, pred_series)
     print(f'Mean Absolute Percent Error: {mape}')
     print(f'Mean Squared Error: {mse}')
-
-
-feature_df = df.loc[:, ['INSAGE', 'VEHICLE_TYPE', 'GENDER', 'MARITAL_STATUS', 'PREVCLM', 'SEATBELT']]
-target_series = df.loc[:, 'LOSS']
-feature_train_df, feature_test_df, target_train_series, target_test_series = train_test_split(feature_df, target_series, test_size=0.3, random_state=123)
-
-prepared_feature_train_df = prepare_data(feature_train_df)
-prepared_feature_test_df = prepare_data(feature_test_df)
-
-model = sm.OLS(target_train_series, prepared_feature_train_df).fit()
-
-# save model
-save_pickle(model,'model.pickle')
-train_pred_series = model.predict(prepared_feature_train_df)
-test_pred_series = model.predict(prepared_feature_test_df)
-
-
-print(model.summary())
-print_error_metrics(target_train_series, train_pred_series)
-print_error_metrics(target_test_series, test_pred_series)
