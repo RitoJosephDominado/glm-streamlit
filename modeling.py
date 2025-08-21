@@ -47,3 +47,12 @@ def print_error_metrics(target_series, pred_series):
     mse = mean_squared_error(target_series, pred_series)
     print(f'Mean Absolute Percent Error: {mape}')
     print(f'Mean Squared Error: {mse}')
+
+def create_glm_model(target_series, prepared_feature_df, model_type='OLS'):
+    if model_type == 'OLS':
+        model = sm.OLS(target_series, prepared_feature_df).fit()
+    elif model_type == 'Gamma':
+        model = sm.GLM(target_series, prepared_feature_df, family=sm.families.Gamma(link=sm.families.links.Log())).fit()
+    elif model_type == 'Tweedie':
+        model = sm.GLM(target_series, prepared_feature_df, family=sm.families.Tweedie(var_power=1.5, link=sm.families.links.Log())).fit()
+    return model

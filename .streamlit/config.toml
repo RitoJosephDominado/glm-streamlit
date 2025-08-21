@@ -1,0 +1,22 @@
+[theme]
+
+# Set a primary color for buttons, links, etc.
+primaryColor = "#ce5151ff"
+
+# Set the background color of the main content area.
+backgroundColor = "#f2f5f9ff"
+
+# Set the background color for secondary elements like containers,
+# expanders, and the sidebar. By making this color different from
+# the main background, it will make boxes more distinct.
+secondaryBackgroundColor = "#a0a4adff"
+
+# Set the color for text.
+textColor = "#262730"
+
+# Set a custom font. The 'sans serif' option is a good default.
+font = "sans serif"
+
+# To use custom fonts, you can specify them here:
+# font = "Arial"
+
